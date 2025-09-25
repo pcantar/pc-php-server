@@ -1,0 +1,104 @@
+{
+  "name": "pc-php-server",
+  "displayName": "PC PHP Server",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.104.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "pcPhpServer.startPhpServer",
+        "title": "Start PHP Server"
+      },
+      {
+        "command": "pcPhpServer.stopPhpServer",
+        "title": "Stop PHP Server"
+      },
+      {
+        "command": "pcPhpServer.openInBrowser",
+        "title": "Open File in Browser"
+      },
+      {
+        "command": "pcPhpServer.togglePhpServer",
+        "title": "Toggle PHP Server"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "pcPhpServer.submenu",
+        "label": "PC Server"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "pcPhpServer.startPhpServer",
+          "when": "editorTextFocus",
+          "group": "pcPhpServer"
+        },
+        {
+          "command": "pcPhpServer.stopPhpServer",
+          "when": "editorTextFocus",
+          "group": "pcPhpServer"
+        },
+        {
+          "command": "pcPhpServer.openInBrowser",
+          "when": "editorTextFocus",
+          "group": "pcPhpServer"
+        }
+      ],
+      "pcPhpServer.submenu": [
+        {
+          "command": "pcPhpServer.openInBrowser"
+        }
+      ]
+    }
+  },
+  "configuration": {
+    "title": "PC PHP Server Config",
+    "properties": {
+      "pcPhpServer.settings.port": {
+        "type": [
+          "number"
+        ],
+        "default": 9000,
+        "minimum": 0,
+        "maximum": 65535,
+        "description": "The port number on which the PHP server will run"
+      },
+      "pcPhpServer.projectRoot": {
+        "type": "string",
+        "default": "/home/coder/project",
+        "description": "The root directory to serve with the PHP server"
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.104.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@typescript-eslint/eslint-plugin": "^8.42.0",
+    "@typescript-eslint/parser": "^8.42.0",
+    "eslint": "^9.34.0",
+    "typescript": "^5.9.2",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
