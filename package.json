@@ -1,11 +1,16 @@
 {
   "name": "pc-php-server",
+  "author": {
+    "name": "Paolo Cantarella"
+  },
+  "publisher": "Paolo Cantarella",
   "displayName": "PC PHP Server",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.104.0"
   },
+  "icon": "assets/icon.png",
   "categories": [
     "Other"
   ],
@@ -16,71 +21,78 @@
   "contributes": {
     "commands": [
       {
-        "command": "pcPhpServer.startPhpServer",
+        "command": "pcphpserver.startPhpServer",
         "title": "Start PHP Server"
       },
       {
-        "command": "pcPhpServer.stopPhpServer",
+        "command": "pcphpserver.stopPhpServer",
         "title": "Stop PHP Server"
       },
       {
-        "command": "pcPhpServer.openInBrowser",
+        "command": "pcphpserver.openInBrowser",
         "title": "Open File in Browser"
       },
       {
-        "command": "pcPhpServer.togglePhpServer",
+        "command": "pcphpserver.togglePhpServer",
         "title": "Toggle PHP Server"
       }
     ],
     "submenus": [
       {
-        "id": "pcPhpServer.submenu",
-        "label": "PC Server"
+        "id": "pcphpserver.submenu",
+        "label": "PC PHP Server"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "pcPhpServer.startPhpServer",
+          "command": "pcphpserver.startPhpServer",
           "when": "editorTextFocus",
-          "group": "pcPhpServer"
+          "group": "pcphpserver"
         },
         {
-          "command": "pcPhpServer.stopPhpServer",
+          "command": "pcphpserver.stopPhpServer",
           "when": "editorTextFocus",
-          "group": "pcPhpServer"
+          "group": "pcphpserver"
         },
         {
-          "command": "pcPhpServer.openInBrowser",
+          "command": "pcphpserver.openInBrowser",
           "when": "editorTextFocus",
-          "group": "pcPhpServer"
+          "group": "pcphpserver"
         }
       ],
-      "pcPhpServer.submenu": [
+      "pcphpserver.submenu": [
         {
-          "command": "pcPhpServer.openInBrowser"
+          "command": "pcphpserver.openInBrowser"
         }
       ]
-    }
-  },
-  "configuration": {
-    "title": "PC PHP Server Config",
-    "properties": {
-      "pcPhpServer.settings.port": {
-        "type": [
-          "number"
-        ],
-        "default": 9000,
-        "minimum": 0,
-        "maximum": 65535,
-        "description": "The port number on which the PHP server will run"
-      },
-      "pcPhpServer.projectRoot": {
-        "type": "string",
-        "default": "/home/coder/project",
-        "description": "The root directory to serve with the PHP server"
+    },
+    "configuration": {
+      "title": "PC PHP Server Config",
+      "properties": {
+        "pcPhpServer.port": {
+          "type": "number",
+          "default": 9000,
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "The port number on which the PHP server will run"
+        },
+        "pcPhpServer.projectRoot": {
+          "type": "string",
+          "default": "/home/coder/project",
+          "description": "The root directory to serve with the PHP server"
+        },
+        "pcPhpServer.showOpenInBrowserMessages": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show a message when a file is opened in browser"
+        }
       }
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pcantar/pc-php-server.git"
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

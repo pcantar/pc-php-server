@@ -5,6 +5,8 @@ const config = vscode.workspace.getConfiguration('pcPhpServer');
 
 const serverPort = config.get<number>('port', 9000);
 const projectRoot = config.get<string>('projectRoot', '/home/coder/project');
+// const projectRoot = config.get<string>('projectRoot', '/Users/paolocantarella/prova');
+const showOpenInBrowserMessages = config.get<boolean>('showOpenInBrowserMessages', true);
 
 let phpTerminal: vscode.Terminal | null = null;
 
@@ -15,22 +17,22 @@ let statusBarItem: vscode.StatusBarItem;
 export function activate(context: vscode.ExtensionContext) {
 	// Create status bar button
 	statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-	statusBarItem.command = 'extension.togglePhpServer';
+	statusBarItem.command = 'pcphpserver.togglePhpServer';
 
 	updateStatusBar(); // Initial update
 	statusBarItem.show();
 
 	// Register toggle command
-	const toggleCommand = vscode.commands.registerCommand('extension.togglePhpServer', togglePhpServer);
+	const toggleCommand = vscode.commands.registerCommand('pcphpserver.togglePhpServer', togglePhpServer);
 
 	// Start PHP server
-	const startCommand = vscode.commands.registerCommand('extension.startPhpServer', togglePhpServer);
+	const startCommand = vscode.commands.registerCommand('pcphpserver.startPhpServer', togglePhpServer);
 
 	// Stop PHP server
-	const stopCommand = vscode.commands.registerCommand('extension.stopPhpServer', togglePhpServer);
+	const stopCommand = vscode.commands.registerCommand('pcphpserver.stopPhpServer', togglePhpServer);
 
 	// Open file in browser
-	const openInBrowserCommand = vscode.commands.registerCommand('extension.openInBrowser', openInBrowser);
+	const openInBrowserCommand = vscode.commands.registerCommand('pcphpserver.openInBrowser', openInBrowser);
 
 	context.subscriptions.push(startCommand, stopCommand, openInBrowserCommand, toggleCommand);
 }
@@ -49,12 +51,20 @@ function openInBrowser() {
 		return;
 	}
 
-	// Get relative path to the project root
 	const relativePath = filePath.replace(projectRoot, '').replace(/\\/g, '/');
-	const url = `http://localhost:${serverPort}/app${relativePath}`;
+	const baseLocalUri = vscode.Uri.parse(`http://localhost:${serverPort}`);
 
-	vscode.env.openExternal(vscode.Uri.parse(url));
-	vscode.window.showInformationMessage(`Opened: ${url}`);
+	vscode.env.asExternalUri(baseLocalUri).then((externalBaseUri) => {
+		// Now you build the full external URL
+		const externalUrl = vscode.Uri.joinPath(externalBaseUri, relativePath).toString();
+
+		vscode.env.openExternal(vscode.Uri.parse(externalUrl));
+		if (showOpenInBrowserMessages) {
+			vscode.window.showInformationMessage(`Opened: ${externalUrl}`);
+		}
+	}, (err) => {
+		vscode.window.showErrorMessage(`Failed to resolve external URI: ${err.message}`);
+	});
 }
 
 function togglePhpServer() {
