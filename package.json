@@ -6,7 +6,7 @@
   "publisher": "Paolo Cantarella",
   "displayName": "PC PHP Server",
   "description": "",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.104.0"
   },
@@ -21,20 +21,19 @@
   "contributes": {
     "commands": [
       {
-        "command": "pcphpserver.startPhpServer",
-        "title": "Start PHP Server"
-      },
-      {
-        "command": "pcphpserver.stopPhpServer",
-        "title": "Stop PHP Server"
-      },
-      {
         "command": "pcphpserver.openInBrowser",
         "title": "Open File in Browser"
       },
       {
         "command": "pcphpserver.togglePhpServer",
         "title": "Toggle PHP Server"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "pcphpserver.openInBrowser",
+        "key": "ctrl+alt+b",
+        "mac": "cmd+ctrl+b"
       }
     ],
     "submenus": [
@@ -46,18 +45,14 @@
     "menus": {
       "editor/context": [
         {
-          "command": "pcphpserver.startPhpServer",
-          "when": "editorTextFocus",
-          "group": "pcphpserver"
-        },
-        {
-          "command": "pcphpserver.stopPhpServer",
-          "when": "editorTextFocus",
-          "group": "pcphpserver"
-        },
-        {
           "command": "pcphpserver.openInBrowser",
           "when": "editorTextFocus",
+          "group": "pcphpserver"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "pcphpserver.openInBrowser",
           "group": "pcphpserver"
         }
       ],

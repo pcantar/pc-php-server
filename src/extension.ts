@@ -4,8 +4,7 @@ import { spawn, ChildProcess } from 'child_process';
 const config = vscode.workspace.getConfiguration('pcPhpServer');
 
 const serverPort = config.get<number>('port', 9000);
-const projectRoot = config.get<string>('projectRoot', '/home/coder/project');
-// const projectRoot = config.get<string>('projectRoot', '/Users/paolocantarella/prova');
+const projectRoot = config.get<string>('projectRoot', '');
 const showOpenInBrowserMessages = config.get<boolean>('showOpenInBrowserMessages', true);
 
 let phpTerminal: vscode.Terminal | null = null;
@@ -25,26 +24,27 @@ export function activate(context: vscode.ExtensionContext) {
 	// Register toggle command
 	const toggleCommand = vscode.commands.registerCommand('pcphpserver.togglePhpServer', togglePhpServer);
 
-	// Start PHP server
-	const startCommand = vscode.commands.registerCommand('pcphpserver.startPhpServer', togglePhpServer);
-
-	// Stop PHP server
-	const stopCommand = vscode.commands.registerCommand('pcphpserver.stopPhpServer', togglePhpServer);
-
 	// Open file in browser
 	const openInBrowserCommand = vscode.commands.registerCommand('pcphpserver.openInBrowser', openInBrowser);
 
-	context.subscriptions.push(startCommand, stopCommand, openInBrowserCommand, toggleCommand);
+	context.subscriptions.push(openInBrowserCommand, toggleCommand);
 }
 
-function openInBrowser() {
-	const editor = vscode.window.activeTextEditor;
-	if (!editor) {
-		vscode.window.showErrorMessage("No active file to open.");
-		return;
+function openInBrowser(uri?: vscode.Uri) {
+	let filePath: string | undefined;
+
+	if (uri && uri.fsPath) {
+		// Called from explorer context
+		filePath = uri.fsPath;
+	} else if (vscode.window.activeTextEditor) {
+		// Called from editor context
+		filePath = vscode.window.activeTextEditor.document.uri.fsPath;
 	}
 
-	const filePath = editor.document.uri.fsPath;
+	if (!filePath) {
+		vscode.window.showErrorMessage("No file selected to open.");
+		return;
+	}
 
 	if (!filePath.startsWith(projectRoot)) {
 		vscode.window.showErrorMessage(`File is outside the server root: ${projectRoot}`);
